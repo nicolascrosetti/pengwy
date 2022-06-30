@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Login } from "./components/Login";
 import { Home } from "./components/Home";
 import { LeftNav } from "./components/LeftNav";
@@ -7,13 +7,17 @@ import './style.css';
 import { signOut } from "firebase/auth";
 import { auth, db } from "./firebase-config";
 import { getDocs, collection, doc } from "firebase/firestore";
+import { Create } from "./components/Create";
 
 export const App = () => {
   //states
   const [isAuth, setIsAuth] = useState(false);
+  const [createViewOn, setCreateViewOn] = useState(false);
   const [pengs, setPengs] = useState([]);
+  const [pengsCreated, setPengsCreated] = useState(0);
   //refs
   const pengsCollectionRef = collection(db, "pengs");
+
 
   //get pengs
   useEffect(() => {
@@ -22,7 +26,7 @@ export const App = () => {
       setPengs(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     }
     getPengs();
-  }, []);
+  }, [pengsCreated]);
 
   //when pengs update
   /* useEffect(() => {
@@ -38,7 +42,7 @@ export const App = () => {
 
   return (
     <div className="container">
-      <LeftNav />
+      <LeftNav  isAuth={isAuth} setCreateViewOn={setCreateViewOn} />
       <div className="main-section">
         {/* If the user is authenticated show home section, else show login section */}
         { isAuth ? 
@@ -46,8 +50,9 @@ export const App = () => {
         (<Login setIsAuth={setIsAuth} />)
       }
       </div>
-      
       <RightNav signUserOut={signUserOut} isAuth={isAuth} />
+
+      { createViewOn ? <Create setCreateViewOn={setCreateViewOn} pengsCreated={pengsCreated} setPengsCreated={setPengsCreated} /> : <></> } 
     </div>
   );
 }
