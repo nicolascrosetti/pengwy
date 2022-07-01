@@ -103,12 +103,26 @@ button:hover{
 .peng-box{
     border-bottom: 1px solid rgb(224, 224, 224);
     width: 100%;
+    animation: append-animate .3s linear;
 }
+
+@keyframes append-animate {
+	from {
+		transform: scale(0);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1);
+		opacity: 1;	
+	}
+}
+
 .peng-container{
     padding: 25px;
     display: flex;
     gap: 10px;
 }
+
 .column{
     display: flex;
     flex-direction: column;

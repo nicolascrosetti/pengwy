@@ -8,6 +8,7 @@ import { signOut } from "firebase/auth";
 import { auth, db } from "./firebase-config";
 import { getDocs, collection, doc } from "firebase/firestore";
 import { Create } from "./components/Create";
+import { useUpdateEffect } from "react-use";
 
 export const App = () => {
   //states
@@ -18,8 +19,6 @@ export const App = () => {
   //refs
   const pengsCollectionRef = collection(db, "pengs");
 
-
-  //get pengs
   useEffect(() => {
     const getPengs = async () => {
       const data = await getDocs(pengsCollectionRef);
