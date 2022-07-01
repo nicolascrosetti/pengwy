@@ -2,10 +2,14 @@ const penguinIcon = require('../icons/penguin.png');
 const hashtagIcon = require('../icons/hashtag.png');
 const homeIcon = require('../icons/home.png');
 
-export const LeftNav = ({isAuth, setCreateViewOn}) => {
+export const LeftNav = ({isAuth, setCreateViewOn, setProfileViewOn}) => {
     const handlePengButton= () => {
         setCreateViewOn(true);
     }
+    const handleHomeButton = () => {
+        setProfileViewOn(false);
+    }
+
 
     return ( 
         <ul className="nav gap-30 right-border">
@@ -14,9 +18,9 @@ export const LeftNav = ({isAuth, setCreateViewOn}) => {
             </li>
             { isAuth ? 
             (<>
-            <li className='link'>
-            <img className='icon' src={homeIcon} alt="" />
-            <a>Home</a>
+            <li className='link' onClick={handleHomeButton}>
+                <img className='icon' src={homeIcon} alt="" />
+                <a >Home</a>
             </li>
             <li className='link'>
                 <img className='icon' src={hashtagIcon} alt="" />

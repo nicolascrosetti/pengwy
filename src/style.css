@@ -12,8 +12,11 @@ html, body, #root{
 .blue{
     background-color: blue;
 }
-p,ul,h2{
+p,ul,h2,h4{
     margin: 0;
+}
+h4{
+    margin-bottom: 10px;
 }
 li{
     list-style-type: none;
@@ -148,6 +151,9 @@ button:hover{
 .right-border{
     border-right: 1px solid rgb(224, 224, 224);
 }
+.bottom-border{
+    border-bottom: 1px solid rgb(224, 224, 224);
+}
 .nav{
     flex: 1;
     background-color: #fbfbfb;
@@ -261,4 +267,35 @@ button:hover{
 }
 #create-button:hover{
     background-color: rgba(0, 0, 0, 0.644);
+}
+.user-box{
+    padding-top: 25px;
+    padding-bottom: 25px;
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.user-box img{
+    border-radius: 50px;
+    width: 100px;
+    height: 100px;
+}
+.pengs-amount{
+    color: rgb(116, 116, 116);
+    font-style: italic;
+}
+#user-pengs-title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    margin: 0 auto;
+}
+.user-name{
+    cursor: pointer;
+}
+.user-name:hover{
+    text-decoration: underline;
 }

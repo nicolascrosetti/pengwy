@@ -1,7 +1,13 @@
+import { click } from "@testing-library/user-event/dist/click";
 import Moment from "react-moment";
 
-export const Peng = ({peng}) => {
+export const Peng = ({peng, userClickHandler}) => {
     const date = peng.date.toDate();
+    const clickHandler = () => {
+        if(userClickHandler){
+            userClickHandler(peng.userName, peng.userId, peng.photoUrl);
+        }
+    }
 
     return (
         <div className="peng-box">
@@ -11,7 +17,7 @@ export const Peng = ({peng}) => {
                 </div>
                 <div className="column">
                     <div className="row"> 
-                        <p><strong>{peng.userName}</strong></p> 
+                        <p onClick={clickHandler} className="user-name"><strong>{peng.userName}</strong></p> 
                         <Moment className="date" date={date} fromNow ago />
                     </div>
                     <p>{peng.peng}</p>
