@@ -1,11 +1,23 @@
-import { auth, provider } from "../firebase-config";
+import { auth, provider, db} from "../firebase-config";
 import { signInWithPopup } from "firebase/auth";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 export const Login = ({ setIsAuth }) => {
+    // const usersCollectionRef = collection (db, "users");
     const signInWithGoogle = () => {
         signInWithPopup(auth, provider).then((result) => {
           setIsAuth(true);
-          console.log(auth.currentUser.photoURL);
+          console.log(auth.currentUser.uid);
+          //const userDoc = doc(db, "users", auth.currentUser.uid);
+          /* if(!(doc(db, "users", auth.currentUser.uid))) {
+            const createUser = async () => {
+                await setDoc(doc(db, "users", auth.currentUser.uid), {
+                    followedUsers: []
+                });
+            }
+            createUser();
+          } */
+          
         });
     };
 
