@@ -9,6 +9,7 @@ import { auth, db } from "./firebase-config";
 import { getDocs, updateDoc, setDoc, arrayUnion, collection, doc, arrayRemove } from "firebase/firestore";
 import { Create } from "./components/Create";
 import { Profile } from "./components/Profile";
+import { Explore } from "./components/Explore";
 import { useUpdateEffect } from "react-use";
 
 export const App = () => {
@@ -19,12 +20,16 @@ export const App = () => {
   const [pengsCreated, setPengsCreated] = useState(0);
   const [profileUser, setProfileUser] = useState({});
   const [profileUserPengs, setProfileUserPengs] = useState([]);
+  const [currentUser, setCurrentUser] = useState([]);
+  const [currentUserFollowedPengs, setCurrentUserFollowedPengs] = useState([]);
   //views
   const [createViewOn, setCreateViewOn] = useState(false);
   const [profileViewOn, setProfileViewOn] = useState(false);
+  const [exploreViewOn, setExploreViewOn] = useState(false);
   //refs
   const pengsCollectionRef = collection(db, "pengs");
   const usersCollectionRef = collection(db, "users");
+
 
 
   useEffect(() => {
@@ -46,6 +51,25 @@ export const App = () => {
     }
     getUsers();
   }, []);
+
+  useEffect(() => {
+    getCurrentUser();
+  }, [users, pengs]);
+
+  useEffect(() => {
+    const tempPengs = [];
+
+    if(currentUser.followedUsers){
+        pengs.forEach((peng) => {
+          (currentUser.followedUsers).forEach((followedUserId) => {
+          if(peng.userId == followedUserId){
+            tempPengs.push(peng);
+          }
+          });
+        });
+      setCurrentUserFollowedPengs(tempPengs);
+    }
+  }, [currentUser]);
 
 
  /*  useEffect(() => {
@@ -77,6 +101,15 @@ export const App = () => {
     setProfileUser(user);
     setProfileUserPengs(userPengs);
     setProfileViewOn(true);
+  }
+
+  const getCurrentUser = () => {
+    users.forEach((user) => {
+      if(user.id == auth.currentUser.uid){
+        const tempUser = {...user};
+        setCurrentUser(tempUser);
+      }
+    });
   }
 
   const checkIfFollowed = (setIsFollowed, id) => {
@@ -115,12 +148,14 @@ export const App = () => {
 
   return (
     <div className="container">
-      <LeftNav  isAuth={isAuth} setCreateViewOn={setCreateViewOn} setProfileViewOn={setProfileViewOn} />
+      <LeftNav isAuth={isAuth} setCreateViewOn={setCreateViewOn} setProfileViewOn={setProfileViewOn} setExploreViewOn={setExploreViewOn} />
       <div className="main-section">
         {/* If the user is authenticated show home section, else show login section */}
         { isAuth ? 
           (
-            profileViewOn ? (<Profile checkIfFollowed={checkIfFollowed} user={profileUser} pengs={profileUserPengs} followUser={followUser} unfollowUser={unfollowUser} profileViewOn={profileViewOn} />) : (<Home pengs={pengs} userClickHandler={userClickHandler} />)
+            profileViewOn ? (<Profile checkIfFollowed={checkIfFollowed} user={profileUser} pengs={profileUserPengs} followUser={followUser} unfollowUser={unfollowUser} profileViewOn={profileViewOn} />) 
+            : exploreViewOn ? (<Explore pengs={pengs} userClickHandler={userClickHandler} />)
+            : (<Home pengs={currentUserFollowedPengs} userClickHandler={userClickHandler} />)
           ) :
           (<Login setIsAuth={setIsAuth} />)
           }
