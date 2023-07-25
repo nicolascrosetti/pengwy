@@ -2,16 +2,18 @@ const penguinIcon = require('../icons/penguin.png');
 const hashtagIcon = require('../icons/hashtag.png');
 const homeIcon = require('../icons/home.png');
 
-export const LeftNav = ({isAuth, setCreateViewOn, setProfileViewOn, setExploreViewOn}) => {
+export const LeftNav = ({isAuth, setCreateViewOn, setProfileViewOn, setExploreViewOn, setHomeViewOn}) => {
     const handlePengButton= () => {
         setCreateViewOn(true);
     }
     const handleHomeButton = () => {
+        setHomeViewOn(true);
         setProfileViewOn(false);
         setExploreViewOn(false);
     }
     const handleExploreButton = () => {
         setProfileViewOn(false);
+        setHomeViewOn(false);
         setExploreViewOn(true);
     }
 

@@ -26,6 +26,7 @@ export const App = () => {
   const [createViewOn, setCreateViewOn] = useState(false);
   const [profileViewOn, setProfileViewOn] = useState(false);
   const [exploreViewOn, setExploreViewOn] = useState(false);
+  const [homeViewOn, setHomeViewOn] = useState(true);
   //refs
   const pengsCollectionRef = collection(db, "pengs");
   const usersCollectionRef = collection(db, "users");
@@ -125,6 +126,7 @@ export const App = () => {
   }
 
   const followUser = (currentUserId, userToFollowId) => {
+    //Update users in db
     const updateUser = async (id, followedId) => {
       const userDoc = doc(db, "users", id);
       await setDoc(userDoc, {
@@ -133,9 +135,23 @@ export const App = () => {
     };
 
     updateUser(currentUserId, userToFollowId);
+
+    // Update users state locally
+    const updatedUsersLocal = users.map((user) => {
+      if (user.id === currentUserId) {
+        return {
+          ...user,
+          followedUsers: [...user.followedUsers, userToFollowId],
+        };
+      }
+      return user;
+    });
+
+    setUsers(updatedUsersLocal);
   }
 
   const unfollowUser = (currentUserId, userToFollowId) => {
+    //Update users in db
     const updateUser = async (id, followedId) => {
       const userDoc = doc(db, "users", id);
       await setDoc(userDoc, {
@@ -144,18 +160,35 @@ export const App = () => {
     }
 
     updateUser(currentUserId, userToFollowId);
+
+    //Update users state locally
+    const updatedUsersLocal = users.map((user) => {
+      if (user.id === currentUserId) {
+        // Filter followedUsers array to remove userToFollowId
+        const updatedFollowedUsers = user.followedUsers.filter(
+          (followedUserId) => followedUserId !== userToFollowId
+        );
+        // Create new user with updated followedUsers array
+        return {
+          ...user,
+          followedUsers: updatedFollowedUsers,
+        };
+      }
+      return user;
+    });
+    setUsers(updatedUsersLocal);
   }
 
   return (
     <div className="container">
-      <LeftNav isAuth={isAuth} setCreateViewOn={setCreateViewOn} setProfileViewOn={setProfileViewOn} setExploreViewOn={setExploreViewOn} />
+      <LeftNav isAuth={isAuth} setCreateViewOn={setCreateViewOn} setProfileViewOn={setProfileViewOn} setExploreViewOn={setExploreViewOn} setHomeViewOn={setHomeViewOn} />
       <div className="main-section">
         {/* If the user is authenticated show home section, else show login section */}
         { isAuth ? 
           (
             profileViewOn ? (<Profile checkIfFollowed={checkIfFollowed} user={profileUser} pengs={profileUserPengs} followUser={followUser} unfollowUser={unfollowUser} profileViewOn={profileViewOn} />) 
             : exploreViewOn ? (<Explore pengs={pengs} userClickHandler={userClickHandler} />)
-            : (<Home pengs={currentUserFollowedPengs} userClickHandler={userClickHandler} />)
+            : homeViewOn ? (<Home pengs={currentUserFollowedPengs} userClickHandler={userClickHandler} />) : null
           ) :
           (<Login setIsAuth={setIsAuth} />)
           }
