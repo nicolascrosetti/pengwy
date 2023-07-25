@@ -7,9 +7,9 @@ export const Explore = ({currentPengs}) => {
 
 import { Peng } from "./Peng";
 
-export const Explore = ({pengs, userClickHandler}) => {
+export const Explore = ({pengs, userClickHandler, currentUserId, deleteHandler}) => {
     return pengs.map((peng) => {
-        return <Peng key={peng.id} peng={peng} userClickHandler={userClickHandler} />
+        return <Peng key={peng.id} peng={peng} userClickHandler={userClickHandler} currentUserId={currentUserId} deleteHandler={deleteHandler} />
     });
 }
 

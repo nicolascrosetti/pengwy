@@ -107,6 +107,7 @@ button:hover{
     border-bottom: 1px solid rgb(224, 224, 224);
     width: 100%;
     animation: append-animate .3s linear;
+    position: relative;
 }
 
 @keyframes append-animate {
@@ -124,6 +125,24 @@ button:hover{
     padding: 25px;
     display: flex;
     gap: 10px;
+}
+
+.delete-box{
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size:  small;
+    color: red;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.delete-icon{
+    width: 20px;
+    height: 20px;
 }
 
 .column{

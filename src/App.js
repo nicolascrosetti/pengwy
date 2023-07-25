@@ -6,7 +6,7 @@ import { RightNav } from "./components/RightNav";
 import './style.css';
 import { signOut } from "firebase/auth";
 import { auth, db } from "./firebase-config";
-import { getDocs, updateDoc, setDoc, arrayUnion, collection, doc, arrayRemove } from "firebase/firestore";
+import { getDocs, updateDoc, setDoc, arrayUnion, collection, doc, arrayRemove, deleteDoc } from "firebase/firestore";
 import { Create } from "./components/Create";
 import { Profile } from "./components/Profile";
 import { Explore } from "./components/Explore";
@@ -113,6 +113,7 @@ export const App = () => {
     });
   }
 
+  //#region Following
   const checkIfFollowed = (setIsFollowed, id) => {
     users.forEach((user) => {
       if(user.id == auth.currentUser.uid){
@@ -178,6 +179,24 @@ export const App = () => {
     });
     setUsers(updatedUsersLocal);
   }
+  //#endregion
+
+  const deleteHandler = (pengId) => {
+    //Update pengs in db
+    const deletePeng = async (pengId) => {
+      const pengDoc = doc(db, "pengs", pengId);
+      await deleteDoc(pengDoc);
+    }
+
+    deletePeng(pengId);
+
+    //Update pengs state locally
+    const updatedPengsLocal = pengs.filter(
+      (peng) => peng.id !== pengId
+    );
+    
+    setPengs(updatedPengsLocal);
+  }
 
   return (
     <div className="container">
@@ -187,8 +206,8 @@ export const App = () => {
         { isAuth ? 
           (
             profileViewOn ? (<Profile checkIfFollowed={checkIfFollowed} user={profileUser} pengs={profileUserPengs} followUser={followUser} unfollowUser={unfollowUser} profileViewOn={profileViewOn} />) 
-            : exploreViewOn ? (<Explore pengs={pengs} userClickHandler={userClickHandler} />)
-            : homeViewOn ? (<Home pengs={currentUserFollowedPengs} userClickHandler={userClickHandler} />) : null
+            : exploreViewOn ? (<Explore pengs={pengs} userClickHandler={userClickHandler} currentUserId={auth.currentUser.uid} deleteHandler={deleteHandler} />)
+            : homeViewOn ? (<Home pengs={currentUserFollowedPengs} userClickHandler={userClickHandler} currentUserId={auth.currentUser.uid} deleteHandler={deleteHandler}  />) : null
           ) :
           (<Login setIsAuth={setIsAuth} />)
           }
