@@ -184,6 +184,10 @@ export const App = () => {
   }
   //#endregion
 
+  const pengButtonMobileHandler = () => {
+    setCreateViewOn(true);
+  }
+
   const deleteHandler = (pengId) => {
     //Update pengs in db
     const deletePeng = async (pengId) => {
@@ -230,6 +234,15 @@ export const App = () => {
       {/* Create Peng Form */}
       { createViewOn ? <Create setCreateViewOn={setCreateViewOn} pengsCreated={pengsCreated} setPengsCreated={setPengsCreated} /> : <></> } 
 
+      {/* Peng Mobile Button */}    
+      { isAuth ? 
+        <div id="peng-button-mobile" onClick={pengButtonMobileHandler}>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="icon">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </div>
+      : null }
+      
       {/* Mobile Bottom Nav */}
       <BottomNav isAuth={isAuth} setProfileViewOn={setProfileViewOn} setExploreViewOn={setExploreViewOn} setHomeViewOn={setHomeViewOn} />
     </div>
