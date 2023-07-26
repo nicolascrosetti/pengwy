@@ -19,7 +19,7 @@ export const LeftNav = ({isAuth, setCreateViewOn, setProfileViewOn, setExploreVi
 
 
     return ( 
-        <ul className="nav gap-30 right-border">
+        <ul id="left-nav" className="nav gap-30 right-border">
             <li>
                 <img className="logo-image" src={penguinIcon} alt="" />
             </li>

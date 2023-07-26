@@ -132,11 +132,16 @@ button:hover{
     top: 10px;
     right: 15px;
     font-size:  small;
-    color: red;
+    color: rgb(163, 0, 0);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
+}
+
+.delete-box:hover{
+    color: red;
 }
 
 
@@ -172,6 +177,9 @@ button:hover{
 }
 .bottom-border{
     border-bottom: 1px solid rgb(224, 224, 224);
+}
+.top-border{
+    border-top: 1px solid rgb(224, 224, 224);
 }
 .nav{
     flex: 1;
@@ -332,4 +340,31 @@ button:hover{
 }
 .user-name:hover{
     text-decoration: underline;
+}
+
+.mobile-nav{
+    width: 100%;
+    height: 75px;
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 480px) {
+    #left-nav{
+        display: none;
+    }
+    #right-nav{
+        display: none;
+    }
+    .container{
+        flex-direction: column;
+    }
+}
+
+@media (min-width: 481px) {
+    .mobile-nav{
+        display: none;
+    }
 }

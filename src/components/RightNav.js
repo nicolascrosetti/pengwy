@@ -2,7 +2,7 @@ import { auth } from "../firebase-config";
 
 export const RightNav = ({signUserOut, isAuth}) => {
     return (
-        <div className="nav left-border">
+        <div id="right-nav" className="nav left-border">
            { isAuth ? 
            (<>
            <div className="user-info">

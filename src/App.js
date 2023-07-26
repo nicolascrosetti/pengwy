@@ -11,6 +11,9 @@ import { Create } from "./components/Create";
 import { Profile } from "./components/Profile";
 import { Explore } from "./components/Explore";
 import { useUpdateEffect } from "react-use";
+import { BottomNav } from "./components/BottomNav";
+
+const penguinIcon = require('./icons/penguin.png');
 
 export const App = () => {
   //states
@@ -200,7 +203,15 @@ export const App = () => {
 
   return (
     <div className="container">
+      {/* Mobile top nav */}
+      <div id="top-nav" className="mobile-nav bottom-border">
+        <img src={penguinIcon} className="logo-image" />
+      </div>
+
+      {/* Desktop Left Nav */}
       <LeftNav isAuth={isAuth} setCreateViewOn={setCreateViewOn} setProfileViewOn={setProfileViewOn} setExploreViewOn={setExploreViewOn} setHomeViewOn={setHomeViewOn} />
+      
+      {/* Main Section */}
       <div className="main-section">
         {/* If the user is authenticated show home section, else show login section */}
         { isAuth ? 
@@ -212,9 +223,15 @@ export const App = () => {
           (<Login setIsAuth={setIsAuth} />)
           }
       </div>
+      
+      {/* Desktop Right Nav */}
       <RightNav signUserOut={signUserOut} isAuth={isAuth} />
 
+      {/* Create Peng Form */}
       { createViewOn ? <Create setCreateViewOn={setCreateViewOn} pengsCreated={pengsCreated} setPengsCreated={setPengsCreated} /> : <></> } 
+
+      {/* Mobile Bottom Nav */}
+      <BottomNav isAuth={isAuth} setProfileViewOn={setProfileViewOn} setExploreViewOn={setExploreViewOn} setHomeViewOn={setHomeViewOn} />
     </div>
   );
 }
