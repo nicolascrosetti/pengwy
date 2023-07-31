@@ -220,9 +220,9 @@ export const App = () => {
         {/* If the user is authenticated show home section, else show login section */}
         { isAuth ? 
           (
-            profileViewOn ? (<Profile checkIfFollowed={checkIfFollowed} user={profileUser} pengs={profileUserPengs} followUser={followUser} unfollowUser={unfollowUser} profileViewOn={profileViewOn} />) 
-            : exploreViewOn ? (<Explore pengs={pengs} userClickHandler={userClickHandler} currentUserId={auth.currentUser.uid} deleteHandler={deleteHandler} />)
-            : homeViewOn ? (<Home pengs={currentUserFollowedPengs} userClickHandler={userClickHandler} currentUserId={auth.currentUser.uid} deleteHandler={deleteHandler}  />) : null
+            profileViewOn ? (<Profile checkIfFollowed={checkIfFollowed} user={profileUser} pengs={profileUserPengs} followUser={followUser} unfollowUser={unfollowUser} profileViewOn={profileViewOn} setProfileViewOn={setProfileViewOn} />) 
+            : exploreViewOn ? (<Explore pengs={pengs} userClickHandler={userClickHandler} currentUserId={auth.currentUser.uid} deleteHandler={deleteHandler} pengsCreated={pengsCreated} setPengsCreated={setPengsCreated}/>)
+            : homeViewOn ? (<Home pengs={currentUserFollowedPengs} userClickHandler={userClickHandler} currentUserId={auth.currentUser.uid} deleteHandler={deleteHandler} pengsCreated={pengsCreated} setPengsCreated={setPengsCreated} />) : null
           ) :
           (<Login setIsAuth={setIsAuth} />)
           }
