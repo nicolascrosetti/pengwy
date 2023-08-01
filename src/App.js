@@ -12,6 +12,7 @@ import { Profile } from "./components/Profile";
 import { Explore } from "./components/Explore";
 import { useUpdateEffect } from "react-use";
 import { BottomNav } from "./components/BottomNav";
+import { DrawerNav } from "./components/DrawerNav";
 
 const penguinIcon = require('./icons/penguin.png');
 
@@ -25,11 +26,15 @@ export const App = () => {
   const [profileUserPengs, setProfileUserPengs] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
   const [currentUserFollowedPengs, setCurrentUserFollowedPengs] = useState([]);
+  const [maxFollowedUser, setMaxFollowedUser] = useState({});
   //views
-  const [createViewOn, setCreateViewOn] = useState(false);
   const [profileViewOn, setProfileViewOn] = useState(false);
   const [exploreViewOn, setExploreViewOn] = useState(false);
   const [homeViewOn, setHomeViewOn] = useState(true);
+  //subviews
+  const [createViewOn, setCreateViewOn] = useState(false);
+  const [drawerNavViewOn, setDrawerNavViewOn] = useState(false);
+  const [currentUserProfileOn, setCurrentUserProfileOn] = useState(false);
   //refs
   const pengsCollectionRef = collection(db, "pengs");
   const usersCollectionRef = collection(db, "users");
@@ -54,11 +59,21 @@ export const App = () => {
       setUsers(tempUsers);
     }
     getUsers();
+
+    getMaxFollowedUser();
   }, []);
 
   useEffect(() => {
-    getCurrentUser();
+    if(isAuth){
+      getCurrentUser();
+    }
   }, [users, pengs]);
+
+  useEffect(() => {
+    if(isAuth){
+      getCurrentUser();
+    }
+  }, [isAuth]);
 
   useEffect(() => {
     const tempPengs = [];
@@ -90,6 +105,13 @@ export const App = () => {
   };
 
   const userClickHandler = (name,id,photoUrl) => {
+    //check if its the currents users profile
+    if(id == auth.currentUser.uid){
+      setCurrentUserProfileOn(true);
+    }else{
+      setCurrentUserProfileOn(false);
+    }
+
     const userObj = (name,id,photoUrl) => {
       return {name,id,photoUrl}
     }
@@ -108,12 +130,35 @@ export const App = () => {
   }
 
   const getCurrentUser = () => {
+      users.forEach((user) => {
+        if(user.id == auth.currentUser.uid){
+          const tempUser = {...user};
+          setCurrentUser(tempUser);
+        }
+      });
+  }
+
+  const getMaxFollowedUser = () => {
+    let maxFollowedUserTemp = {
+      id: '',
+      name: '',
+      photoUrl: ''
+    }
+    let maxFollowers = 0;
     users.forEach((user) => {
-      if(user.id == auth.currentUser.uid){
-        const tempUser = {...user};
-        setCurrentUser(tempUser);
+      if(user.followedUsers.length > maxFollowers){
+        maxFollowers = user.followedUsers.length;
+        maxFollowedUserTemp.id = user.id;
       }
     });
+    pengs.forEach((peng) => {
+      if(peng.userId = maxFollowedUser.id){
+        maxFollowedUserTemp.name = peng.userName;
+        maxFollowedUserTemp.photoUrl = peng.photoUrl;
+      }
+    });
+
+    setMaxFollowedUser(maxFollowedUserTemp);
   }
 
   //#region Following
@@ -205,15 +250,20 @@ export const App = () => {
     setPengs(updatedPengsLocal);
   }
 
+  const profileIconMobileHandler = () => {
+    setDrawerNavViewOn(true);
+  }
+
   return (
     <div className="container">
       {/* Mobile top nav */}
-      <div id="top-nav" className="mobile-nav bottom-border">
+      <div id="top-nav" className="mobile-nav bottom-border relative">
+      { isAuth ?  (<img className="profile-icon-mobile" src={auth.currentUser.photoURL}  alt="user pic" onClick={profileIconMobileHandler} />) : null }
         <img src={penguinIcon} className="logo-image" />
       </div>
 
       {/* Desktop Left Nav */}
-      <LeftNav isAuth={isAuth} setCreateViewOn={setCreateViewOn} setProfileViewOn={setProfileViewOn} setExploreViewOn={setExploreViewOn} setHomeViewOn={setHomeViewOn} />
+      <LeftNav isAuth={isAuth} setCreateViewOn={setCreateViewOn} setProfileViewOn={setProfileViewOn} setExploreViewOn={setExploreViewOn} setHomeViewOn={setHomeViewOn} homeViewOn={homeViewOn} exploreViewOn={exploreViewOn} profileViewOn={profileViewOn} userClickHandler={userClickHandler} currentUserProfileOn={currentUserProfileOn} />
       
       {/* Main Section */}
       <div className="main-section">
@@ -229,7 +279,7 @@ export const App = () => {
       </div>
       
       {/* Desktop Right Nav */}
-      <RightNav signUserOut={signUserOut} isAuth={isAuth} />
+      <RightNav signUserOut={signUserOut} isAuth={isAuth} maxFollowedUser={maxFollowedUser} />
 
       {/* Create Peng Form */}
       { createViewOn ? <Create setCreateViewOn={setCreateViewOn} pengsCreated={pengsCreated} setPengsCreated={setPengsCreated} /> : <></> } 
@@ -245,6 +295,9 @@ export const App = () => {
       
       {/* Mobile Bottom Nav */}
       <BottomNav isAuth={isAuth} setProfileViewOn={setProfileViewOn} setExploreViewOn={setExploreViewOn} setHomeViewOn={setHomeViewOn} />
+
+      {/* Mobile Drawer Nav */}
+      { drawerNavViewOn ? (<DrawerNav setDrawerNavViewOn={setDrawerNavViewOn} signUserOut={signUserOut} isAuth={isAuth} />) : null }
     </div>
   );
 }

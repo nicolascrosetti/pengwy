@@ -1,6 +1,6 @@
 import { auth } from "../firebase-config";
 
-export const RightNav = ({signUserOut, isAuth}) => {
+export const RightNav = ({signUserOut, isAuth, maxFollowedUser}) => {
     return (
         <div id="right-nav" className="nav left-border">
            { isAuth ? 
@@ -13,9 +13,17 @@ export const RightNav = ({signUserOut, isAuth}) => {
                      <button onClick={signUserOut}>Sign Out</button>
                 </div>
                 <div className="right-nav-box section-container-start">
-                    <h3>get verified</h3>
-                    <p>Subscribe to unlock more features</p>
+                    <h3 className="font-xlarge">get verified</h3>
+                    <p className="font-large">Subscribe to unlock more features</p>
                     <button>get verified</button>
+                </div>
+                <div className="right-nav-box">
+                    <h3 className="font-xlarge">who to follow</h3>
+                    <br></br>
+                     <div className="row-centered">
+                          <img className="profile-pic" src={maxFollowedUser.photoUrl}  alt="user pic" />
+                          <p>{maxFollowedUser.name}</p>
+                     </div>
                 </div>
            </div>)
            : <></>} 
