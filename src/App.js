@@ -59,8 +59,6 @@ export const App = () => {
       setUsers(tempUsers);
     }
     getUsers();
-
-    getMaxFollowedUser();
   }, []);
 
   useEffect(() => {

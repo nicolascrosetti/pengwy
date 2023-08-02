@@ -17,7 +17,7 @@ export const RightNav = ({signUserOut, isAuth, maxFollowedUser}) => {
                     <p className="font-large">Subscribe to unlock more features</p>
                     <button>get verified</button>
                 </div>
-                <div className="right-nav-box">
+                <div className="right-nav-box hidden">
                     <h3 className="font-xlarge">who to follow</h3>
                     <br></br>
                      <div className="row-centered">
